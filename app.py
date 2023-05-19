@@ -53,4 +53,4 @@ def predict():
        Children, Family_Size, Is_Parent, Total_Promos]])[0]
     return render_template('index.html', **locals())
 
-if __name__ == '__main__':
+    if __name__ == '__main__':
