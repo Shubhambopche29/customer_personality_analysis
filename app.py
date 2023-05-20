@@ -1,56 +1,65 @@
-#from flask import Flask, render_template, request
+import streamlit as st
 import pickle
+import random
 
 # load the model
 model = pickle.load(open('customer_model.pkl', 'rb'))
 
-#@app.route('/')
-def home():
-    result = ''
-    return render_template('index.html', **locals())
+def main():
+    # Set a random background template
+    bg_templates = ["primary", "secondary", "info", "success", "warning", "danger", "light", "dark"]
+    bg_template = random.choice(bg_templates)
+    st.markdown(f'<style>.reportview-container .main .block-container{{background-color: {bg_template};}}</style>', unsafe_allow_html=True)
 
+    st.title("Customer Prediction")
+    st.write("Enter the customer details below:")
 
-#@app.route('/predict', methods=['POST', 'GET'])
-def predict():
-    Education =float(request.form['Education'])
-    Income =float(request.form['Income'])
-    Kidhome =float(request.form['Kidhome'])
-    Teenhome =float(request.form['Teenhome'])
-    Recency =float(request.form['Recency'])
-    MntWines =float(request.form['MntWines'])
-    MntFruits =float(request.form['MntFruits'])
-    MntMeatProducts =float(request.form['MntMeatProducts'])
-    MntFishProducts =float(request.form['MntFishProducts'])
-    MntSweetProducts =float(request.form['MntSweetProducts'])
-    MntGoldProds =float(request.form['MntGoldProds'])
-    NumDealsPurchases =float(request.form['NumDealsPurchases'])
-    NumWebPurchases =float(request.form['NumWebPurchases'])
-    NumCatalogPurchases =float(request.form['NumCatalogPurchases'])
-    NumStorePurchases =float(request.form['NumStorePurchases'])
-    NumWebVisitsMonth =float(request.form['NumWebVisitsMonth'])
-    AcceptedCmp3 =float(request.form['AcceptedCmp3'])
-    AcceptedCmp4 =float(request.form['AcceptedCmp4'])
-    AcceptedCmp5 =float(request.form['AcceptedCmp5'])
-    AcceptedCmp1 =float(request.form['AcceptedCmp1'])
-    AcceptedCmp2 =float(request.form['AcceptedCmp2'])
-    Complain =float(request.form['Complain'])
-    Response =float(request.form['Response'])
-    Age =float(request.form['Age'])
-    Spent =float(request.form['Spent'])
-    Living_With =float(request.form['Living_With'])
-    Children =float(request.form['Children'])
-    Family_Size =float(request.form['Family_Size'])
-    Is_Parent =float(request.form['Is_Parent'])
-    Total_Promos =float(request.form['Total_Promos'])
+    Education = st.number_input("Education")
+    Income = st.number_input("Income")
+    Kidhome = st.number_input("Kidhome")
+    Teenhome = st.number_input("Teenhome")
+    Recency = st.number_input("Recency")
+    MntWines = st.number_input("MntWines")
+    MntFruits = st.number_input("MntFruits")
+    MntMeatProducts = st.number_input("MntMeatProducts")
+    MntFishProducts = st.number_input("MntFishProducts")
+    MntSweetProducts = st.number_input("MntSweetProducts")
+    MntGoldProds = st.number_input("MntGoldProds")
+    NumDealsPurchases = st.number_input("NumDealsPurchases")
+    NumWebPurchases = st.number_input("NumWebPurchases")
+    NumCatalogPurchases = st.number_input("NumCatalogPurchases")
+    NumStorePurchases = st.number_input("NumStorePurchases")
+    NumWebVisitsMonth = st.number_input("NumWebVisitsMonth")
+    AcceptedCmp3 = st.number_input("AcceptedCmp3")
+    AcceptedCmp4 = st.number_input("AcceptedCmp4")
+    AcceptedCmp5 = st.number_input("AcceptedCmp5")
+    AcceptedCmp1 = st.number_input("AcceptedCmp1")
+    AcceptedCmp2 = st.number_input("AcceptedCmp2")
+    Complain = st.number_input("Complain")
+    Response = st.number_input("Response")
+    Age = st.number_input("Age")
+    Spent = st.number_input("Spent")
+    Living_With = st.number_input("Living_With")
+    Children = st.number_input("Children")
+    Family_Size = st.number_input("Family_Size")
+    Is_Parent = st.number_input("Is_Parent")
+    Total_Promos = st.number_input("Total_Promos")
 
+    @st.cache()
+    def predict():
+        customer_data = [[Education, Income, Kidhome, Teenhome, Recency, MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds, NumDealsPurchases, NumWebPurchases, NumCatalogPurchases, NumStorePurchases, NumWebVisitsMonth,
+        AcceptedCmp3, AcceptedCmp4, AcceptedCmp5, AcceptedCmp1, AcceptedCmp2, Complain, Response, Age, Spent, Living_With,
+        Children, Family_Size, Is_Parent, Total_Promos]]
+        result = model.predict(customer_data)[0]
+        return result
 
+    # Predict button
+    if st.button("Predict"):
+        try:
+            result = predict()
+            st.write("Prediction:", result)
+        except Exception as e:
+            st.error("An error occurred during prediction. Please check your inputs and try again.")
 
-
-
-    result = model.predict([[Education, Income,Kidhome, Teenhome, Recency, MntWines,MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts,MntGoldProds, NumDealsPurchases, NumWebPurchases,NumCatalogPurchases, NumStorePurchases, NumWebVisitsMonth,
-       AcceptedCmp3, AcceptedCmp4, AcceptedCmp5, AcceptedCmp1,
-       AcceptedCmp2, Complain, Response, Age, Spent, Living_With,
-       Children, Family_Size, Is_Parent, Total_Promos]])[0]
-    return render_template('index.html', **locals())
-
-    if __name__ == '__main__':
+if __name__ == '__main__':
+    main()
