@@ -8,7 +8,7 @@ import streamlit as st
 import pickle
 import random
 from PIL import Image
-import sklearn
+
 
 # load the model
 model = pickle.load(open('customer_model.pkl', 'rb'))
